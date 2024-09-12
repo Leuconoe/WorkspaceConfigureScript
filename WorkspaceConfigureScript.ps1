@@ -16,7 +16,7 @@ $WingetPackages = @(
 "Bandisoft.Honeyview",
 "Anaconda.Anaconda3", 
 "CoreyButler.NVMforWindows",
-"Notepad\u002B\u002B.Notepad\u002B\u002B",
+"Notepad++.Notepad++",
 "Google.GoogleDrive",
 "Google.Chrome",
 "Google.ChromeRemoteDesktopHost",
