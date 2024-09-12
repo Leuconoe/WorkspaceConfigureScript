@@ -2,13 +2,15 @@
 ####################### font & app list #######################
 ###############################################################
 # some nerdfonts from https://www.nerdfonts.com/font-downloads
-$FontPath = $FontPath -or @(
+if (-not $FontPath) {
+$FontPath = @(
 "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/Ubuntu.zip",
 "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip",
 "https://github.com/Leuconoe/d2codingfont-nerd-fonts/releases/download/D2Coding-Ver1.3.2-20180524-Nerd-Fonts-v3.0.2-168/D2Coding-Ver1.3.2-20180524-Nerd-Fonts-v3.0.2-168.zip"
 )
-
-$WingetPackages = $WingetPackages -or @(
+}
+if (-not $WingetPackages) {
+$WingetPackages = @(
 "chocolatey",
 "Bandisoft.Bandizip",
 "Bandisoft.Honeyview",
@@ -31,17 +33,22 @@ $WingetPackages = $WingetPackages -or @(
 "Starship.Starship", 
 "JanDeDobbeleer.OhMyPosh"
 )
+}
 
-$ChocoPackages = $ChocoPackages -or @(
+if (-not $ChocoPackages) {
+$ChocoPackages = @(
     "androidstudio",
     "qdir"
 )
+}
 
-$PSModules = $PSModules -or @(
+if (-not $PSModules) {
+$PSModules = @(
     "Terminal-Icons",  #Terminal-Icons is a PowerShell module that adds file and folder icons when displaying items in the terminal. ( https://github.com/devblackops/Terminal-Icons )
     "PSReadLine",      # PSReadLine is replaces the command line editing experience of PowerShell for versions 3 and up( https://github.com/PowerShell/PSReadLine )
     "PSFzf"            # PSFzf is a PowerShell module that wraps fzf, a fuzzy file finder for the command line. ( https://github.com/kelleyma49/PSFzf )
 )
+}
 
 #########################################################
 ####################### FUNCTIONS #######################
