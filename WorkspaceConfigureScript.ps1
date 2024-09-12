@@ -32,7 +32,7 @@ $WingetPackages = $WingetPackages -or @(
 "JanDeDobbeleer.OhMyPosh"
 )
 
-$ChocoPackages = $ChocoPackages - or @(
+$ChocoPackages = $ChocoPackages -or @(
     "androidstudio",
     "qdir"
 )
