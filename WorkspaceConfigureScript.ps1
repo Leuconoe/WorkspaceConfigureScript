@@ -170,5 +170,5 @@ $profileValues = @(
 Add-MultiLineTextIfMissing -FilePath $PROFILE -TextsValues $profileValues
 
 #if using starship, add config
-mkdir -p ~/.config || New-Item ~/.config/starship.toml || cd ~/.config/
+mkdir -p ~/.config | New-Item ~/.config/starship.toml | cd ~/.config/
 starship preset gruvbox-rainbow -o starship.toml
