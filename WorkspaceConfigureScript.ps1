@@ -29,12 +29,12 @@ $WingetPackages = $WingetPackages -or @(
 "tailscale.tailscale",
 "junegunn.fzf",
 "Starship.Starship", 
-"JanDeDobbeleer.OhMyPosh",
+"JanDeDobbeleer.OhMyPosh"
 )
 
 $ChocoPackages = $ChocoPackages - or @(
     "androidstudio",
-	"qdir",
+    "qdir"
 )
 
 $PSModules = $PSModules -or @(
@@ -163,8 +163,8 @@ foreach ($module in $PSModules) {
 $profileValues = @(
     @("#Terminal-Icons", "Import-Module -Name Terminal-Icons"),
     @("#fzf", "Import-Module -Name PSFzf"),
-	#@("#oh-my-posh", "oh-my-posh init pwsh --config ~/quick-term.omp.json | Invoke-Expression"),
-	@("#starship", "Invoke-Expression (&starship init powershell)"),
+    #@("#oh-my-posh", "oh-my-posh init pwsh --config ~/quick-term.omp.json | Invoke-Expression"),
+    @("#starship", "Invoke-Expression (&starship init powershell)"),
 )
 
 Add-MultiLineTextIfMissing -FilePath $PROFILE -TextsValues $profileValues
