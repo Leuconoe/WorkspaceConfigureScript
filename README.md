@@ -14,3 +14,8 @@ $localPath = "$env:TEMP\script.ps1"
 
 Invoke-WebRequest -Uri $url -OutFile $localPath
 ```
+
+```
+$url = "https://raw.githubusercontent.com/Leuconoe/WorkspaceConfigureScript/main/WorkspaceConfigureScript.ps1"
+curl -o "$env:TEMP\script.ps1" $url
+```
