@@ -41,6 +41,7 @@ if (-not $WingetPackages) {
 }
 if (-not $ChocoPackages) {
 	$ChocoPackages = @(
+		"wingetui",
 		"androidstudio",
 		"qdir"
 	)
@@ -75,11 +76,11 @@ function Install-FontsFromURL {
 
     try {
         # Download the file
-        Write-Host "Downloading file from $downloadUrl..."
+        #Write-Host "Downloading file from $downloadUrl..."
         Invoke-WebRequest -Uri $downloadUrl -OutFile $zipFilePath
 
         # Unzip the file to temp folder
-        Write-Host "Extracting files..."
+        #Write-Host "Extracting files..."
         Expand-Archive -Path $zipFilePath -DestinationPath $tempFolder -Force
 
         # Find and install OTF/TTF fonts
@@ -103,7 +104,7 @@ function Install-FontsFromURL {
     } finally {
         # Clean up by deleting the temp folder
         if (Test-Path -Path $tempFolder) {
-            Write-Host "Cleaning up temporary files..."
+            #Write-Host "Cleaning up temporary files..."
             Remove-Item -Path $tempFolder -Recurse -Force
         }
     }
@@ -113,11 +114,6 @@ function AddPowershellProfile {
         [string]$FilePath,
         [array]$TextsValues
     )
-
-    # Ensure the profile file exists
-    if (-not (Test-Path $FilePath)) {
-        New-Item -Path $FilePath -ItemType "file" -Force
-    }
 
     # Read the content of the profile file. Use -ErrorAction to handle empty files gracefully.
     $content = ""
@@ -156,11 +152,17 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 Write-Host "Installing fonts..."
 foreach ($font in $FontPath) {
-	Install-FontsFromURL -downloadUrl $font
+	#Install-FontsFromURL -downloadUrl $font
+}
+
+if (!(Test-Path -Path $PROFILE)) {
+  New-Item -ItemType File -Path $PROFILE -Force
 }
 
 Write-Host "Installing chocolatey..."
 iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+. $profile
 
 Write-Host "update winget from chocolatey..."
 choco install winget -y
