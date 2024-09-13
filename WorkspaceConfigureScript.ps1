@@ -30,13 +30,14 @@ if (-not $WingetPackages) {
 		"Microsoft.WindowsTerminal",
 		"tailscale.tailscale",
 		"junegunn.fzf",
-		"DeepL.DeepL",
+		#"DeepL.DeepL", # install stuck
 		"Starship.Starship", 
 		"JanDeDobbeleer.OhMyPosh"
 	)
 }
 if (-not $ChocoPackages) {
 	$ChocoPackages = @(
+		"deepl"
 		"nerd-fonts-FiraMono",
 		"nerd-fonts-CascadiaCode",
 		"wingetui",
@@ -185,11 +186,11 @@ Write-Host "Running with administrator privileges."
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
 
 Write-Host "Debloat windows..."
-& ([scriptblock]::Create((irm "https://win11debloat.raphi.re/"))) -RunDefaults -Silent
+#& ([scriptblock]::Create((irm "https://win11debloat.raphi.re/"))) -RunDefaults -Silent
 
 Write-Host "Installing fonts..."
 foreach ($font in $FontPath) {
-	Install-FontsFromURL -downloadUrl $font
+	#Install-FontsFromURL -downloadUrl $font
 }
 
 if (!(Test-Path -Path $PROFILE)) {
@@ -227,10 +228,14 @@ foreach ($module in $PSModules) {
     Install-Module -Name $module -Force -AllowClobber -Repository PSGallery
 }
 
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+
 ################################################################################
 ####################### open $profile or modify $profile #######################
 ################################################################################
 $PowershellProfileValues = @(
+	#@("#ExecutionPolicy","Set-ExecutionPolicy -Scope CurrentUser RemoteSigned")
     @("#Terminal-Icons", "Import-Module -Name Terminal-Icons"),
     @("#fzf", "Import-Module -Name PSFzf"),
 	@("#PSReadLine", "Set-PSReadLineOption -PredictionSource History`nSet-PSReadLineOption -PredictionViewStyle ListView"),
