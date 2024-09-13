@@ -20,6 +20,7 @@ if (-not $WingetPackages) {
 		"Google.GoogleDrive",
 		"Google.Chrome",
 		"Google.ChromeRemoteDesktopHost",
+		"voidtools.Everything",
 		"Unity.UnityHub",
 		"Git.Git",
 		"TortoiseGit.TortoiseGit",
@@ -243,13 +244,36 @@ $PowershellProfileValues = @(
     @("#starship", "Invoke-Expression (&starship init powershell)")
 )
 
-AddPowershellProfile -FilePath $PROFILE -TextsValues $PowershellProfileValues
+AddPowershellProfile -FilePath $profile -TextsValues $PowershellProfileValues
 
-notepad $profile
+# copy posh5 profile to posh7
+# Get PowerShell 5 profile path (current user)
+$ps5ProfilePath = $PROFILE
+
+# Get PowerShell 7 profile path (current user)
+$ps7ProfilePath = Join-Path $env:USERPROFILE 'Documents\PowerShell\Microsoft.PowerShell_profile.ps1'
+
+# Check if PowerShell 5 profile exists
+if (Test-Path $ps5ProfilePath) {
+    # Ensure PowerShell 7 profile exists (create it if necessary)
+    if (-not (Test-Path $ps7ProfilePath)) {
+        New-Item -Path $ps7ProfilePath -ItemType "file" -Force
+    }
+
+    # Read PowerShell 5 profile content
+    $ps5Content = Get-Content -Path $ps5ProfilePath -Raw
+
+    # Write PowerShell 5 content to PowerShell 7 profile
+    Set-Content -Path $ps7ProfilePath -Value $ps5Content
+
+    Write-Host "Copied PowerShell 5 profile content to PowerShell 7 profile."
+} else {
+    Write-Host "PowerShell 5 profile not found at $ps5ProfilePath."
+}
 
 #if using starship, add config
-mkdir -p ~/.config;New-Item ~/.config/starship.toml;cd ~/.config/
-starship preset gruvbox-rainbow -o starship.toml
+New-Item -ItemType File -Path $env:USERPROFILE/.config/starship.toml -Force
+starship preset gruvbox-rainbow -o $env:USERPROFILE/.config/starship.toml
 
 
 Read-Host -Prompt "Press Enter to continue"
