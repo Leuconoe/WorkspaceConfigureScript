@@ -16,11 +16,11 @@ if (-not $WingetPackages) {
 	$WingetPackages = @(
 		"nerd-fonts-FiraMono",
 		"nerd-fonts-CascadiaCode",
-		"Bandisoft.Bandizip",
-		"Bandisoft.Honeyview",
+		#"Bandisoft.Bandizip",
+		#"Bandisoft.Honeyview",
 		"Anaconda.Anaconda3", 
 		"CoreyButler.NVMforWindows",
-		"Notepad\u002B\u002B.Notepad\u002B\u002B",
+		"Notepad++.Notepad++",
 		"Google.GoogleDrive",
 		"Google.Chrome",
 		"Google.ChromeRemoteDesktopHost",
@@ -55,12 +55,19 @@ if (-not $PSModules) {
 	)
 }
 
+if (-not $webApps) {
+	$webApps = @(
+		"https://dl.bandisoft.com/bandizip.std/BANDIZIP-SETUP-STD-X64.EXE",
+		"https://dl.bandisoft.com/honeyview.kr/HONEYVIEW-SETUP-KR.EXE"
+	)
+}
+
 Read-Host -Prompt "Press Enter to continue"
 
 #########################################################
 ####################### FUNCTIONS #######################
 #########################################################
-# Function to download, extract and install fonts from a given URL
+
 function Install-FontsFromURL {
     param (
         [string]$downloadUrl  # URL to download the zip file
@@ -135,6 +142,36 @@ function AddPowershellProfile {
         }
     }
 }
+function Install-FromWeb {
+    param (
+        [string[]]$Urls,
+        [string]$TempDir = $env:TEMP,
+        [switch]$SilentInstall = $true
+    )
+
+    foreach ($url in $Urls) {
+        # Extract the filename from the URL
+        $fileName = [System.IO.Path]::GetFileName($url)
+        $filePath = Join-Path $TempDir $fileName
+
+        # Download the .exe file
+        Write-Host "Downloading $fileName..."
+        Invoke-WebRequest -Uri $url -OutFile $filePath
+
+        # Determine whether to run silently or with UI
+        if ($SilentInstall) {
+            Write-Host "Installing $fileName silently..."
+            Start-Process -FilePath $filePath -ArgumentList "/S" -Wait
+        } else {
+            Write-Host "Installing $fileName with UI..."
+            Start-Process -FilePath $filePath -Wait
+        }
+
+        # Optionally, delete the installer after installation
+        Remove-Item $filePath -Force
+        Write-Host "$fileName installation completed and removed from $TempDir."
+    }
+}
 #######################################################
 ####################### install start #################
 #######################################################
@@ -150,9 +187,12 @@ Write-Host "Running with administrator privileges."
 
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
 
+Write-Host "Debloat windows..."
+& ([scriptblock]::Create((irm "https://win11debloat.raphi.re/"))) -RunDefaults -Silent
+
 Write-Host "Installing fonts..."
 foreach ($font in $FontPath) {
-	#Install-FontsFromURL -downloadUrl $font
+	Install-FontsFromURL -downloadUrl $font
 }
 
 if (!(Test-Path -Path $PROFILE)) {
@@ -180,6 +220,9 @@ foreach ($package in $ChocoPackages) {
 	Write-Host "Installing $package..."
     choco install $package -y
 }
+
+Write-Host "Installing app from web..."
+Install-FromWeb -Urls $webApps
 
 Write-Host "Installing module..."
 foreach ($module in $PSModules) {
