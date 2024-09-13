@@ -1,4 +1,4 @@
-# Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Leuconoe/WorkspaceConfigureScript/main/WorkspaceConfigureScript.ps1'))
+# Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Leuconoe/WorkspaceConfigureScript/main/WorkspaceConfigureScript.ps1" -UseBasicParsing)
 
 
 
@@ -8,9 +8,8 @@
 # some nerdfonts from https://www.nerdfonts.com/font-downloads
 if (-not $FontPath) {
 	$FontPath = @(
-		"https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/Ubuntu.zip",
-		#"https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip",
-		"https://github.com/Leuconoe/d2codingfont-nerd-fonts/releases/download/D2Coding-Ver1.3.2-20180524-Nerd-Fonts-v3.0.2-168/D2Coding-Ver1.3.2-20180524-Nerd-Fonts-v3.0.2-168.zip"
+		"https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Ubuntu.zip",
+		"https://github.com/Leuconoe/d2codingfont-nerd-fonts/releases/latest/download/D2Coding-Nerd-Fonts.zip"
 	)
 }
 if (-not $WingetPackages) {
@@ -94,10 +93,10 @@ function Install-FontsFromURL {
 
             # Add font to the registry
             $fontRegistryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-            New-ItemProperty -Path $fontRegistryPath -Name $fontName -Value $fontName -PropertyType String -Force
+            [void](New-ItemProperty -Path $fontRegistryPath -Name $fontName -Value $fontName -PropertyType String -Force)
         }
 
-        Write-Host "Fonts installed successfully!"
+        #Write-Host "Fonts installed successfully!"
 
     } catch {
         Write-Host "An error occurred: $_"
