@@ -14,10 +14,6 @@ if (-not $FontPath) {
 }
 if (-not $WingetPackages) {
 	$WingetPackages = @(
-		"nerd-fonts-FiraMono",
-		"nerd-fonts-CascadiaCode",
-		#"Bandisoft.Bandizip",
-		#"Bandisoft.Honeyview",
 		"Anaconda.Anaconda3", 
 		"CoreyButler.NVMforWindows",
 		"Notepad++.Notepad++",
@@ -41,6 +37,8 @@ if (-not $WingetPackages) {
 }
 if (-not $ChocoPackages) {
 	$ChocoPackages = @(
+		"nerd-fonts-FiraMono",
+		"nerd-fonts-CascadiaCode",
 		"wingetui",
 		"androidstudio",
 		"qdir"
@@ -91,7 +89,6 @@ function Install-FontsFromURL {
         Expand-Archive -Path $zipFilePath -DestinationPath $tempFolder -Force
 
         # Find and install OTF/TTF fonts
-        Write-Host "Installing fonts..."
         Get-ChildItem -Path $tempFolder -Recurse -Include *.otf, *.ttf | ForEach-Object {
             $fontPath = $_.FullName
             $fontName = $_.Name
@@ -169,7 +166,7 @@ function Install-FromWeb {
 
         # Optionally, delete the installer after installation
         Remove-Item $filePath -Force
-        Write-Host "$fileName installation completed and removed from $TempDir."
+        #Write-Host "$fileName installation completed and removed from $TempDir."
     }
 }
 #######################################################
@@ -211,14 +208,14 @@ Write-Host "Installing winget packages..."
 winget settings --enable InstallerHashOverride
 foreach ($package in $WingetPackages) {
 	Write-Host "Installing $package..."
-    winget install --id=$package --exact --source winget --accept-source-agreements --disable-interactivity --silent --accept-package-agreements --force
+    winget install --id=$package  --exact --source winget --accept-source-agreements --disable-interactivity --silent --accept-package-agreements
 }
 winget settings --disable InstallerHashOverride
 
 Write-Host "Installing choco packages..."
 foreach ($package in $ChocoPackages) {
 	Write-Host "Installing $package..."
-    choco install $package -y
+    choco install $package -y --no-progress
 }
 
 Write-Host "Installing app from web..."
@@ -242,6 +239,8 @@ $PowershellProfileValues = @(
 )
 
 AddPowershellProfile -FilePath $PROFILE -TextsValues $PowershellProfileValues
+
+notepad $profile
 
 #if using starship, add config
 mkdir -p ~/.config;New-Item ~/.config/starship.toml;cd ~/.config/
